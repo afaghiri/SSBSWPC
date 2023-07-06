@@ -1,1 +1,5 @@
-# SSBSWPC
+# SSB+SWPC: a novel method to estimate time resolved connectivity
+
+Representing any set of time series using networks are used in many scientific fields. Historically, the constructed networks were constant throughout the whole temporal range of the data, but more recently time resolved networks have attracted a lot of attentions. One field where these time-resolved networks are used more and more is neuroimaging. Assuming we have the nodes of the human brain and their associated time series, the question is then finding the edges between these nodes in such a way that is time resolved. For functional data (e.g., functional magnetic resonance imaging or fMRI) the term time resolved functional connectivity (trFC) is often used to talk about these edges. Another related term to trFC is dynamic functional connectivity (dFC). Note that if the nodes are network themselves, we usually use the term time resolved functional network connectivity (trFNC) and dynamic functional connectivity (dFNC).
+
+
