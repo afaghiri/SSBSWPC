@@ -5,6 +5,6 @@ Many estimators have been suggested for estimating the trFC from a set of time s
 
 ### References
 
-[1] Leonardi, N., & Van De Ville, D. (2015). On spurious and real fluctuations of dynamic functional connectivity during rest. Neuroimage, 104, 430-436.
-[2] Faghiri, A., Yang, K., Ishizuka, K., Sawa, A., Adali, T., & Calhoun, V. (2023). Frequency modulation increases the specificity of time-resolved connectivity: A resting-state fMRI study. bioRxiv, 2023-06.
+[1] Leonardi, N., & Van De Ville, D. (2015). On spurious and real fluctuations of dynamic functional connectivity during rest. Neuroimage, 104, 430-436.\
+[2] Faghiri, A., Yang, K., Ishizuka, K., Sawa, A., Adali, T., & Calhoun, V. (2023). Frequency modulation increases the specificity of time-resolved connectivity: A resting-state fMRI study. bioRxiv, 2023-06.\
 [3] Faghiri, A., Adali, T., & Calhoun, V. D. (2022, March). Single Sideband Modulation as a Tool To Improve Functional Connectivity Estimation. In 2022 IEEE 19th International Symposium on Biomedical Imaging (ISBI) (pp. 1-4). IEEE.
