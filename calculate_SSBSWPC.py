@@ -6,12 +6,9 @@ from scipy.fft import fft, fftfreq
 from numpy.matlib import repmat
 
 
-def calculate_SSBSWPC(Tc, winsize, Tr=2, mod_fs=0, win_type = 'rect', plot_flag = 0):
+def calculate_SSBSWPC(Tc, winsize, Tr=2, mod_fs=None, win_type = 'rect', freq_range=None, plot_flag = 0):
     """calculate SSB+SWPC
-    calculate pairwise Sliding window Pearson correaltion (SWPC) using 
-    single side band modulation (SSB). Using SSB+SWPC instead of classic 
-    SWPC, allows us to select shorter window sizes without removing 
-    important low-frequency information of the inputs.
+    calculate pairwise Sliding window Pearson correlation (SWPC) using  single side band modulation (SSB).Using SSB+SWPC instead of classic SWPC, allows us to select shorter window sizes without removing important low-frequency information of the inputs.
     
     Parameters
     ----------
@@ -20,34 +17,49 @@ def calculate_SSBSWPC(Tc, winsize, Tr=2, mod_fs=0, win_type = 'rect', plot_flag 
     winsize : int
         window size for the algorithm
     Tr : float, optional
-        sampling interval in time. This value is important for visulaization
-        , by default 2
+        sampling interval in time. This value is important for visualization, by default 2
     mod_fs : int, optional
-        modulation frequency in Hz, by default 0. If equal to 0, the same as 
-        SWPC
+        modulation frequency in Hz, by default None. If no value is given, the frequency rang (freq_range) should be specified as a list with two element so that mod_fs can be chosen based on those two values and the cutoff frequency of the high pass filter of sliding window Pearson correlation. On the other hand, if mod_fs is 0, classic SWPC is estimated.
     win_type : str, optional
-        ype of window. Can be 'rect' for rectangular, 'gauss' for gaussian, 
-        and 'tukey' for tukey (tapered cosine) window., by default 'rect'
+        type of window. Can be 'rect' for rectangular, 'gauss' for gaussian, and 'tukey' for tukey (tapered cosine) window., by default 'rect'
+    freq_range : list, optional
+        the frequency range of TC in Hertz. This should be a list with two elements. these two values are used to select an (almost) optimal value for mod_fs. Please note that this value is accurate if rect window type is used, as we assume we have rectangular window when calculating the cut-off frequency of the high-pass filter of SWPC. But this value should provide improvement regardless.
     plot_flag : int, optional
-        if 1, generate and plot informative figures that aid in assessing the accuracy or
-        validity of the chosen parameters, by default 0
+        if 1, generate and plot informative figures that aid in assessing the accuracy or validity of the chosen parameters, by default 0
 
     Returns
     -------
     SSBSWPC_vec : numpy.array
-        estimated time resolved sample Pearson correaltion, i.e., time resolved connectivity.
-        (window number, numper of pairs). window number is equal to Tc.shape[0]-winsize+1
-        while numper of pairs is equal to Tc.shape[1]*(Tc.shape[1]-1)/2. SSBSWPC_vec is 
+        estimated time resolved sample Pearson correlation, i.e., time resolved connectivity.
+        (window number, number of pairs). window number is equal to Tc.shape[0]-winsize+1
+        while number of pairs is equal to Tc.shape[1]*(Tc.shape[1]-1)/2. SSBSWPC_vec is 
         vectorized version of the connectivity matrix
     win_idx : numpy.array
-        window center index as a vector (window number,). Can be usefull for matching the 
+        window center index as a vector (window number,). Can be useful for matching the 
         SSBSWPC_vec with any time series in the same temporal space as Tc
+    
+    Examples
+    --------
+    estimating SSB+SWPC using optimal modulation value (freq_range should be specified)
+    >>> Tc = np.random.randn(100,5)
+    >>> calculate_SSBSWPC(Tc, winsize = 21, Tr=2, freq_range=[.01 .1])
+    
+    estimating SSB+SWPC using user defined modulation value and gaussian window shape
+    >>> Tc = np.random.randn(100,5)
+    >>> calculate_SSBSWPC(Tc, winsize = 21, Tr=2, mod_fs=.1, win_type = 'gauss')
     
     Raises
     ------
     ValueError
         _description_
+    ValueError
+        _description_
+    ValueError
+        _description_
+    ValueError
+        _description_
     """
+    
     Fs = 1/Tr
     match win_type:
         case 'rect':
@@ -60,9 +72,23 @@ def calculate_SSBSWPC(Tc, winsize, Tr=2, mod_fs=0, win_type = 'rect', plot_flag 
             window_tc = spwin.tukey(winsize, alpha=0.5)
         case _:
             raise ValueError("win_type should be 'rect', 'gauss', or 'tukey'.")
-            # print("win_type should be 'rect', 'gauss', or 'tukey'.")
-            # return -1
     window_tc = window_tc / sum(window_tc)
+    
+    # select optimal value for mod_fs based on high pass filter of SWPC and frequency range of the time series (i.e., Tc)
+    if mod_fs is None:
+        if freq_range is None:
+            raise ValueError("When modulation frequency (mod_fs) is not specified, the frequency range (freq_range) should be specified.")
+        elif len(freq_range) != 2:
+            raise ValueError("freq_range should be a list with two elements")
+        else:
+            HPF_cutoff = 0.88/(np.sqrt(winsize**2-1))*Fs
+            mod_fs = HPF_cutoff - freq_range[0]
+            if mod_fs + freq_range[1] > Fs/2:
+                raise ValueError("because of SSB, aliasing is happening. STRONGLY suggest resampling Tc to higher sampling rates.")
+            
+    if mod_fs > Fs/2:
+        raise ValueError("because of SSB, aliasing is happening. STRONGLY suggest resampling Tc to higher sampling rates.")
+            
             
     tt = np.arange(0, Tc.shape[0]*Tr, Tr)
     modulation_tc = np.exp(1j*2*np.pi*tt*mod_fs)
