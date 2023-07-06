@@ -41,6 +41,7 @@ def calculate_SSBSWPC(Tc, winsize, Tr=2, mod_fs=None, win_type = 'rect', freq_ra
     Examples
     --------
     estimating SSB+SWPC using optimal modulation value (freq_range should be specified)
+
     >>> Tc = np.random.randn(100,5)
     >>> calculate_SSBSWPC(Tc, winsize = 21, Tr=2, freq_range=[.01 .1])
     
