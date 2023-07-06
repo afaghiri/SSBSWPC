@@ -49,7 +49,6 @@ def calculate_SSBSWPC(Tc, winsize, Tr=2, mod_fs=None, win_type = 'rect', freq_ra
     >>> Tc = np.random.randn(100,5)
     >>> calculate_SSBSWPC(Tc, winsize = 21, Tr=2, mod_fs=.1, win_type = 'gauss')
     
-    
     Raises
     ------
     ValueError
