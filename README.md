@@ -9,7 +9,6 @@ If u use these codes please cite
 
 Faghiri, A., Yang, K., Ishizuka, K., Sawa, A., Adali, T., & Calhoun, V. (2023). Frequency modulation increases the specificity of time-resolved connectivity: A resting-state fMRI study. bioRxiv, 2023-06.
 
-
 ```python
 @article{faghiri2023frequency,
   title={Frequency modulation increases the specificity of time-resolved connectivity: A resting-state fMRI study},
