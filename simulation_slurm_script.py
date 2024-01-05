@@ -1,11 +1,15 @@
+# This script will run the simulation for different parameters. 
+# This script uses Slurm Workload Manager (a job scheduler) to run
+# each simulation for each parameter set in parallel to save time.
 from simulation_fun import simulation_fun
 import numpy as np
 import sys
 
-corr_fs_vec = np.arange(5e-3, .05 + 5e-3, step=5e-3, dtype=np.float64)
+corr_fs_vec = np.arange(0, 5e-3, step=5e-3, dtype=np.float64)
 corr_amp_vec = np.arange(0, .7 + .1, step=.1, dtype=np.float64)
 tc_wp_vec = np.arange(.1, .5, step=.1, dtype=np.float64)
-SWPC_winsize_vec = np.arange(5, 30, step=2, dtype=int)
+SWPC_winsize_vec = np.arange(5, 100, step=2, dtype=int)
+# SWPC_winsize_vec = np.arange(5, 100, step=2, dtype=int)
 
 # LUT = np.meshgrid(corr_fs_vec, corr_amp_vec, tc_wp_vec, SWPC_winsize_vec)
 # LUT = np.array(LUT1).T.reshape(-1,4)
